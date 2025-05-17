@@ -1,0 +1,76 @@
+// Cargo.toml - Project configuration file
+
+[package]
+name = "omnidork"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "OmniDork: Integrated OSINT, Quantum Resonant Search, and Proxy Scanner"
+
+[dependencies]
+# Core dependencies
+tokio = { version = "1.31", features = ["full"] }
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = "0.4"
+url = "2.4"
+futures = "0.3"
+
+# Database
+sqlx = { version = "0.7", features = ["postgres", "runtime-tokio-rustls", "time", "chrono"] }
+dotenv = "0.15"
+
+# Parsing and regex
+regex = "1.9"
+scraper = "0.17"
+html5ever = "0.26"
+selectors = "0.24"
+
+# Prime-based tokenization
+primal = "0.3"
+
+# Mathematical libraries
+nalgebra = "0.32"
+num-complex = "0.4"
+rand = "0.8"
+
+# Compression
+flate2 = "1.0"
+
+# Utility
+thiserror = "1.0"
+log = "0.4"
+env_logger = "0.10"
+clap = { version = "4.4", features = ["derive"] }
+indicatif = "0.17"
+colored = "2.0"
+lazy_static = "1.4"
+urlencoding = "2.1"
+
+[dev-dependencies]
+tokio-test = "0.4"
+tempfile = "3.8"
+mockito = "1.2"
+
+[features]
+default = ["postgres"]
+postgres = []
+sqlite = []
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[[bin]]
+name = "omnidork"
+path = "src/main.rs"
+
+[lib]
+name = "omnidork"
+path = "src/lib.rs"

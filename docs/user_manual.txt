@@ -1,0 +1,569 @@
+## Installation
+
+### Prerequisites
+
+- Rust toolchain (latest stable version recommended, minimum 1.60 or newer)
+- **Optional:** PostgreSQL database (for storing results, though direct DB interaction is not fully implemented in the current code, the data structures are defined for it).
+- OpenSSL development libraries (often required for `reqwest` with TLS)
+- `pkg-config` (often required for OpenSSL)
+
+### Installation Steps
+
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/your-username/omnidork.git](https://github.com/your-username/omnidork.git) # Replace with actual repo URL
+   cd omnidork
+Optional: If using a PostgreSQL database, create a .env file in the project root with your database configuration (as defined in Cargo.toml dependencies):
+
+DATABASE_URL=postgres://username:password@localhost/omnidork
+And create the database:
+
+Bash
+
+psql -c "CREATE DATABASE omnidork;"
+Install and build the project. Cargo will automatically fetch dependencies from Cargo.toml:
+
+Bash
+
+cargo build --release
+Getting Started
+After successful installation, run OmniDork from the command line from the project root directory:
+
+Bash
+
+./target/release/omnidork
+This will display the main menu with five operating modes:
+
+OSINT and Vulnerability Scanning
+Quantum Resonant Search
+Proxy Scanning
+Open Redirect Vulnerability Scan
+Full Integrated Scan
+Mode 1: OSINT and Vulnerability Scanning
+This mode focuses on discovering security vulnerabilities in a target domain using OSINT techniques and pattern matching.
+
+Usage
+Select option 1 from the main menu.
+Enter a target domain (e.g., example.com).
+OmniDork will perform the OSINT and vulnerability analysis steps as defined in the run_complete_scan function within main.rs.
+Discover subdomains.
+Execute Google dorks.
+Query security services (Shodan, URLScan, DNS - requires external setup and potentially API keys).
+Analyze JavaScript files.
+Check for cloud storage exposures.
+Analyze all gathered data using the VulnerabilityMatcher.
+Match findings to bug bounty programs.
+Generate a report (JSON format).
+Example Output (Console - may vary based on actual findings)
+===============================================================
+                   OmniDork v1.0
+===============================================================
+Integrated OSINT, Quantum Resonant Search, and Proxy Scanner
+===============================================================
+
+Choose operation mode:
+1. OSINT and Vulnerability Scanning
+2. Quantum Resonant Search
+3. Proxy Scanning
+4. Open Redirect Vulnerability Scan
+5. Full Integrated Scan
+> 1
+
+Enter the target domain (e.g., example.com):
+> example.com
+
+Starting complete scan for target: example.com
+
+[1/9] Performing domain reconnaissance...
+Found X subdomains
+
+[2/9] Executing dorks against target and subdomains...
+Got Y results from dork queries
+
+[3/9] Querying specialized security services...
+Retrieved data from specialized services
+
+[4/9] Extracting and analyzing JavaScript files...
+Analyzed Z JavaScript files
+
+[5/9] Checking for cloud storage resources...
+Found W cloud storage resources
+
+[6/9] Analyzing findings...
+Analysis complete with V findings
+
+[7/9] Scanning for usable proxies...
+Found P working proxies
+
+[8/9] Generating visualizations...
+Generated 3 visualizations
+
+[9/9] Matching findings to bug bounty programs...
+Found B potential bug bounty matches
+
+Scan completed successfully!
+Found X vulnerabilities, Y endpoints, and Z bug bounty matches
+Scan complete! Report saved to data/findings/example_com_full_report.json
+Interpreting Results
+The tool saves a comprehensive JSON report in the data/findings/ directory (e.g., data/findings/example_com_full_report.json). This report includes:
+
+Details of the target, timestamp, and the total number of findings, subdomains, vulnerabilities, endpoints, proxies, bug bounty matches, and visualizations.
+A detailed list of all Finding structs discovered by the VulnerabilityMatcher and helper functions, including ID, type, severity, URL, description, timestamp, dork used, screenshot path (if available from services), and whether sensitive data was involved.
+Separate lists for vulnerabilities (derived from dork/Shodan) and API endpoints (derived from dork/JS analysis).
+A list of discovered and validated proxies.
+A list of potential bug bounty matches.
+Information about generated visualization files.
+You will need a JSON viewer or parser to easily read this report file.
+
+Mode 2: Quantum Resonant Search
+This mode provides an advanced search engine that uses quantum-inspired algorithms to find relevant content from crawled web pages.
+
+Usage
+Select option 2 from the main menu.
+Configure Features:
+Choose to enable quantum-inspired scoring (use_quantum_score).
+Choose to enable persistence theory scoring (use_persistence_score).
+If persistence theory is enabled, set the fragility parameter (0.0-1.0, default: 0.2).
+If persistence theory is enabled, set the entropy_weight (0.0-1.0, default: 0.1).
+Choose Data Source (Crawling):
+Use default seed URLs (predefined in main.rs).
+Load URLs from a specified file.
+Specify a single domain to crawl (with an option to stay within that domain).
+Skip crawling and use only the existing index loaded from a checkpoint (if available).
+Configure Crawling Parameters: (If crawling is selected)
+Number of pages to crawl (max_pages).
+Maximum crawl depth (max_depth).
+Number of concurrent crawler workers.
+The system will perform crawling and indexing. Crawled documents are added to the ResonantEngine index.
+When crawling is complete (or if skipped), the search loop begins.
+Enter your search queries at the > prompt.
+Example Search
+Enter your resonant query (or type 'quit' to exit):
+> quantum cryptography applications
+
+Searching for resonant matches...
+
+Top Resonant Matches:
+[1] Document Title
+    URL:            [https://example.com/document-url](https://example.com/document-url)
+    Resonance:      0.8754
+    Δ Entropy:      0.1123
+    Standard Score: 0.7631
+    Quantum Score:  0.8912 (Shown if enabled)
+    Persist. Score: 0.7655 (Shown if enabled)
+    Combined Score: 0.7957 (Calculated based on enabled scores)
+    Preview:        Snippet of the document content...
+
+Enter your resonant query (or type 'quit' to exit):
+> quit
+Exiting.
+Special Commands During Search
+While in the search loop, you can use these commands instead of a search query:
+
+export: Export the current ResonantEngine index (metadata and scores, not full text) to data/index_export.csv.
+checkpoint: Save a checkpoint of the current ResonantEngine state (index, parameters, etc.) to data/checkpoints/latest.checkpoint.
+compress: Compress all document text within the ResonantEngine index to save memory. Documents will be decompressed on demand when needed for snippets.
+quit: Exit the quantum resonant search mode.
+Mode 3: Proxy Scanning
+This mode discovers, validates, and tests anonymous proxies from multiple online sources.
+
+Usage
+Select option 3 from the main menu.
+Configure Scanner Settings:
+Maximum concurrent connections (connection_limit, default: 150, max recommended: 1250).
+Number of validation rounds per proxy (validation_rounds, default: 3).
+Connection timeout in seconds (timeout_duration, default: 5.0).
+Choose to check proxy anonymity level (check_anonymity).
+The scanner will fetch potential proxies, filter blacklisted ranges, group them, and validate them concurrently.
+Once the scan is complete, a summary is displayed, and working proxies are saved to a timestamped file in data/proxies/.
+Optionally, you can choose to run speed tests on the found proxies. Speed test results are displayed and saved to a timestamped CSV file in data/proxies/.
+Proxy Types
+OmniDork, using the ProxyScanner, classifies proxies into three anonymity levels:
+
+Elite: Your real IP is completely hidden; the proxy doesn't reveal itself (no Via, X-Forwarded-For, or proxy-specific headers).
+Anonymous: The proxy identifies itself as a proxy (Via header) but doesn't reveal your real IP address.
+Transparent: The proxy reveals your real IP address in headers (X-Forwarded-For or similar).
+Unknown: Anonymity could not be determined.
+Example Output (Console)
+Choose operation mode:
+...
+> 3
+
+Starting proxy scanner...
+
+Configure proxy scanner settings:
+Maximum concurrent connections (default: 150, max recommended: 1250):
+> [Enter]
+Number of validation rounds per proxy (default: 3):
+> [Enter]
+Connection timeout in seconds (default: 5.0):
+> [Enter]
+Check proxy anonymity level? (y/n, default: y)
+> [Enter]
+
+Starting proxy scan with 150 connections, 3 validation rounds, 5s timeout...
+... (Console output showing fetching, filtering, grouping, and validation progress) ...
+
+Proxy scan completed!
+Found X working proxies
+Saved working proxies to data/proxies/working_proxies_1684971234.txt
+
+Would you like to run speed tests on these proxies? (y/n)
+> y
+
+Running speed tests (this may take a while)...
+... (Console output showing speed test progress) ...
+
+Speed test results:
+Fastest 5 proxies:
+1. IP:Port - 142.35ms (Country)
+2. IP:Port - 183.27ms (Country)
+3. IP:Port - 198.56ms (Country)
+...
+
+Saved speed test results to data/proxies/speed_test_1684971234.csv
+Mode 4: Open Redirect Vulnerability Scan
+This mode focuses specifically on finding open redirect vulnerabilities by testing a list of provided URLs with a specified payload.
+
+Usage
+Select option 4 from the main menu.
+Enter the path to a file containing URLs to scan (one URL per line).
+Enter the payload string to use for redirect testing (default: http://evil.com). This string will be used to replace existing redirect-like parameters in the target URLs.
+The scanner will test each URL for redirection to the specified payload.
+Vulnerable URLs are printed to the console and saved to a timestamped file in data/findings/.
+Example Output (Console)
+Choose operation mode:
+...
+> 4
+
+Open Redirect Vulnerability Scanner
+Enter the file containing URLs to scan:
+> urls_to_test.txt
+Loaded 150 URLs from urls_to_test.txt
+Enter payload for redirect testing (default: [http://evil.com](http://evil.com)):
+> [http://attacker.com/callback](http://attacker.com/callback)
+
+Starting open redirect scan with payload: [http://attacker.com/callback](http://attacker.com/callback)
+... (Console output showing scan progress) ...
+
+Open Redirect Found: [https://example.com/redirect?url=http://attacker.com/callback](https://example.com/redirect?url=http://attacker.com/callback)
+Redirect to different location for [https://test.com/redir?url=http://attacker.com/callback](https://test.com/redir?url=http://attacker.com/callback): [https://test.com/error](https://test.com/error)
+Open Redirect Found in response body: [https://another-site.org/go?to=http://attacker.com/callback](https://another-site.org/go?to=http://attacker.com/callback)
+
+Scan complete!
+Found 7 vulnerable URLs
+Saved vulnerable URLs to data/findings/open_redirect_vulns_1684972345.txt
+(Note: The check for "The fake ones are the ones that scream the most" in the response body is a specific artifact from previous iteration's logic and may or may not be relevant to general open redirect testing).
+
+Mode 5: Full Integrated Scan
+This mode combines the capabilities of the OSINT/Vulnerability Scan, Quantum Resonant Search, and Proxy Scanning for a comprehensive analysis.
+
+Usage
+Select option 5 from the main menu.
+Enter the target domain for the initial OSINT scanning phase.
+The system will execute the three main phases sequentially:
+Phase 1: OSINT and Vulnerability Scan: (Same as Mode 1) Discovers attack surface, finds vulnerabilities, matches bug bounties.
+Phase 2: Quantum Resonant Search: (Uses default/hardcoded parameters for quantum/persistence scoring and crawling) Indexes content from the target domain (and potentially subdomains found in Phase 1).
+Phase 3: Proxy Scanning: Finds and validates anonymous proxies.
+An integrated Markdown report is generated, summarizing findings from all phases.
+What It Does
+The full integrated scan:
+
+Runs OSINT via dork_engine.rs to discover the attack surface and potential vulnerabilities using vulnerability_matcher.rs.
+Applies quantum resonant crawling via crawler.rs and engine.rs to index discovered content within the target domain. Seed URLs are derived from the target and potentially subdomains found in the OSINT phase.
+Finds proxies via proxy_scanner.rs that can be used for anonymous scanning (though direct integration of these proxies into the crawler in this mode is conceptual).
+Summarizes findings from the OSINT scan and lists top documents from the quantum index in an integrated Markdown report generated by main.rs.
+Reports on the number of working proxies found.
+Example Output (Console)
+Choose operation mode:
+...
+> 5
+
+Full Integrated Scan
+This mode combines OSINT scanning, quantum search, and proxy scanning.
+
+Enter the target domain for OSINT scanning:
+> example.com
+
+[Phase 1/3] Starting OSINT and vulnerability scan...
+... (Output from Mode 1 scan) ...
+OSINT scan complete!
+Found X vulnerabilities, Y endpoints, and Z bug bounty matches
+
+[Phase 2/3] Starting quantum resonant search...
+Quantum-inspired scoring enabled
+Persistence theory scoring enabled
+Using X seed URLs for crawling
+... (Output from crawling and indexing) ...
+Quantum resonant indexing complete. Total indexed: N
+
+[Phase 3/3] Starting proxy scanner...
+... (Output from Mode 3 scan) ...
+Proxy scan complete!
+Found P working proxies
+
+Generating integrated report...
+Integrated report saved to data/findings/integrated_report_1684973456.md
+
+Full integrated scan complete!
+Advanced Features
+Customizing Dork Patterns
+You can add custom dork patterns by editing the dork_categories HashMap in the DorkEngine::new() function within src/dork_engine.rs. Follow the existing format.
+
+Using Found Proxies
+To use the discovered proxies with other tools:
+
+Run a proxy scan (Mode 3).
+Find the saved proxy list (e.g., working_proxies_*.txt) in data/proxies/.
+Configure your other tools to use the proxies listed in that file.
+Checkpoint System
+The Quantum Resonant Search mode (Mode 2) and the Full Integrated Scan mode (Phase 2) automatically save checkpoints (data/checkpoints/latest.checkpoint). You can resume from a checkpoint when starting the application if prompted.
+
+Document Compression
+The ResonantEngine in Mode 2 and the Full Integrated Scan (Phase 2) automatically compress document text in memory to save resources. You can manually trigger compression using the compress command in the Mode 2 search loop.
+
+Database Integration (Conceptual)
+The project includes data structures (Finding, Target, Subdomain, etc. in lib.rs) designed to align with a PostgreSQL database schema for persistent storage and historical analysis. Direct database interaction is not fully implemented in the current code, but the data structures are ready.
+
+Visualizations (Conceptual)
+The main.rs generates placeholder files (.svg) in the data/visualizations directory for conceptual visualizations (Timeline, Network Graph, Heatmap) based on findings. Actual visualization generation would require external libraries or tools to process the finding data.
+
+Troubleshooting
+Common Issues
+Connection errors during dorking or proxy fetching/validation:
+
+This is normal and may be due to rate limiting from search engines or proxy sources.
+The tool includes simulated delays and handles some errors automatically.
+Ensure you have a stable internet connection.
+Slow crawling performance:
+
+Reduce the max_pages and max_depth settings in Mode 2 or Mode 5.
+Decrease the number of concurrent crawler workers.
+Ensure you have a good internet connection.
+High memory usage:
+
+Use the compress command during search in Mode 2.
+Reduce the number of pages crawled in Mode 2 or Mode 5.
+Ensure your system meets the recommended memory requirements for the scale of scanning you are performing.
+No proxies found:
+
+Increase the timeout_duration in Mode 3.
+The default proxy sources might be temporarily down or blocked. Consider finding and adding more reliable public proxy sources to proxy_sources in src/proxy_scanner.rs.
+Compiler errors related to OpenSSL or pkg-config:
+
+Ensure you have OpenSSL development libraries and pkg-config installed on your system. Installation steps vary by operating system.
+Contributing
+We welcome contributions to OmniDork! Here's how to get started:
+
+Fork the repository on GitHub (replace your-username with the actual repository owner).
+Create a new branch for your feature or bug fix.
+Implement your changes following Rust style guidelines.
+Include tests for new features if applicable.
+Submit a pull request to the main repository.
+License
+OmniDork is licensed under the MIT License. See the LICENSE file in the project root for details.
+
+Contact
+For questions, issues, or contributions, please use the GitHub Issues page for the project (replace your-username with the actual repository owner):
+
+GitHub Issues: https://github.com/your-username/omnidork/issues
+Email: (Add your preferred contact email here if desired)
+Thank you for using OmniDork! Happy hacking (ethically, of course)!
+
+
+***
+
+### `technical-implementation-guide.md`
+
+```markdown
+# OmniDork: Technical Implementation Guide
+
+This guide provides a deeper dive into the technical architecture and implementation details of the OmniDork project.
+
+## Project Structure
+
+The OmniDork project combines multiple sophisticated components organized into modules:
+
+src/
+├── main.rs                   # Main application entry point and CLI handling
+├── lib.rs                    # Library exports, defines core data structures
+├── tokenizer.rs              # Prime-based tokenization logic
+├── prime_hilbert.rs          # Hilbert space representations, vector operations, scoring
+├── entropy.rs                # Entropy and persistence calculations
+├── engine.rs                 # Core quantum resonant search engine logic (indexing, searching, checkpoints, memory management)
+├── quantum_types.rs          # Quantum mathematical structure definitions (MatrixComplex, VectorComplex, quantum operations)
+├── crawler.rs                # Web crawler for fetching content
+├── dork_engine.rs            # Google dorking, OSINT gathering (subdomains, JS, cloud storage, service queries)
+├── vulnerability_matcher.rs  # Pattern matching and analysis for security issues
+├── proxy_scanner.rs          # Proxy discovery, validation, anonymity, and speed testing
+├── bug_bounty.rs             # Bug bounty program matching and reward estimation
+
+
+## Key Components and Implementation Details
+
+### 1. Quantum Resonant Search Engine (`engine.rs`)
+
+This is the core search technology that uses quantum-inspired algorithms to process and retrieve documents:
+
+- **Document Representation**: Documents are processed into a `Document` struct containing:
+    - `id`: Unique identifier.
+    - `title`, `path`: Metadata.
+    - `text`: Raw document content (can be compressed).
+    - `compressed_text`: Optional field for compressed text data using `flate2` (GzEncoder/GzDecoder).
+    - `token_stream`: Sequence of prime numbers representing words (`tokenizer.rs`).
+    - `prime_vector`: `HashMap<u64, f64>` representing token frequencies (vector space model) (`prime_hilbert.rs`).
+    - `biorthogonal_vector`: `Option<BiorthogonalVector>` for advanced scoring (`prime_hilbert.rs`).
+    - `base_entropy`, `current_entropy`: Shannon entropy metrics (`entropy.rs`).
+    - `quantum_state`: `Option<MatrixComplex<f64>>` representing the quantum state (`quantum_types.rs`).
+    - `reversibility`, `buffering`: Persistence theory parameters (`entropy.rs`).
+    - `last_accessed`: Timestamp for LRU caching.
+    - `modified`: Flag to track changes for checkpointing.
+- **Prime Tokenization**: Words are mapped to prime numbers using `tokenizer::tokenize`.
+- **Biorthogonal Vectors**: `prime_hilbert::build_biorthogonal_vector` creates left and right vectors inspired by non-Hermitian quantum mechanics.
+- **Persistence Theory**: `entropy.rs` provides functions to calculate `shannon_entropy`, `calculate_reversibility`, `entropy_pressure`, `buffering_capacity`, and the final `persistence_score`.
+- **Document Compression**: The `Document::compress` and `Document::decompress` methods handle gzip compression (`flate2`) of document text, managed by `ResonantEngine::manage_memory` and `compress_all_documents` to control memory usage.
+- **Indexing**: `ResonantEngine::add_document` and `add_crawled_document` process new content.
+- **Searching**: `ResonantEngine::search` calculates scores (`dot_product` for standard resonance, `biorthogonal_score` and complex resonance for quantum scoring, `persistence_score` for persistence) and returns ranked `SearchResult` structs. Scoring can be configured via `set_use_quantum_score` and `set_use_persistence_score`.
+- **Quantum Jumps**: `ResonantEngine::apply_quantum_jump` simulates quantum feedback by modifying document states based on query vectors using quantum operations defined in `quantum_types.rs`.
+
+### 2. OSINT Automation Framework (`dork_engine.rs`)
+
+Handles information gathering using search engines and external services:
+
+- **Dork Generation**: `DorkEngine::generate_dorks_for_domain` creates search queries from predefined templates (`dork_categories`).
+- **Dork Execution**: `DorkEngine::execute_dork` and `execute_all_dorks` send queries (currently simulated against DuckDuckGo HTML search) using `reqwest` and parse results into `DorkResult` structs using `scraper`. Includes simulated rate limiting.
+- **Subdomain Discovery**: `DorkEngine::discover_subdomains` uses dorks and potentially other techniques (though primarily dork-based in current code) to find subdomains.
+- **Service Integration**: `DorkEngine::query_shodan`, `query_urlscan`, `gather_dns_info` simulate querying external security services (requires external setup/APIs for real use).
+- **JavaScript Analysis**: `DorkEngine::extract_javascript_files` (conceptual) and `analyze_javascript_files` (simulated) analyze JavaScript content for sensitive information like API keys and endpoints.
+- **Cloud Storage Check**: `DorkEngine::check_cloud_storage` uses dorks to find exposed cloud storage resources.
+
+### 3. Proxy Scanner (`proxy_scanner.rs`)
+
+Manages discovery, validation, and testing of proxies:
+
+- **Proxy Sources**: Configured list of URLs to fetch proxy lists from (`proxy_sources`).
+- **Fetching**: `ProxyScanner::parallel_fetch_proxies` retrieves proxy lists concurrently using `reqwest`, handles different formats (PlainText, HTML parsing with `scraper`).
+- **Filtering**: `filter_blacklisted` removes proxies within known problematic IP ranges (`ipnet`).
+- **Grouping**: `group_by_network` groups proxies (conceptually, for adaptive validation).
+- **Validation**: `adaptive_validate_proxies` orchestrates concurrent validation using Tokio streams (`stream::StreamExt`, `buffer_unordered`). `validate_proxy` and `fast_validate_proxy` perform health checks against test URLs using `reqwest` with proxy support. Includes multiple validation rounds and timeouts.
+- **Performance Measurement**: `measure_proxy_performance` measures response time, determines country (conceptually/via IP info services like ip-api.com), and `determine_anonymity` checks headers (`httpbin.org`) to classify anonymity level (elite, anonymous, transparent).
+- **Speed Testing**: `run_speed_test` measures download speed for validated proxies.
+- **Data Structure**: `ProxyInfo` struct stores detailed proxy information.
+
+### 4. Vulnerability Matcher (`vulnerability_matcher.rs`)
+
+Analyzes collected data against known patterns:
+
+- **Vulnerability Patterns**: Predefined list of `VulnerabilityPattern` structs with ID, name, category, `regex_pattern`, severity, platforms, `false_positive_checks`, `cwe_id`, and `remediation`.
+- **Regex Compilation**: Patterns are compiled into `regex::Regex` instances for efficient matching.
+- **Content Analysis**: `analyze_content` applies regex patterns to given content (like search snippets or crawled text) and extracts context around matches using `extract_context` (with basic sentence/line boundary awareness and optional highlighting).
+- **False Positive Detection**: `is_false_positive` checks context and URL against predefined false positive indicators (`false_positive_checks`, `common_false_positives`, specific patterns like API key placeholders).
+- **Findings Analysis**: `analyze_findings` processes results from various sources (dork results, JS analysis, Shodan, URLScan, DNS, cloud storage) in parallel using helper async functions (`process_dork_results`, etc.). It collects `Finding` structs.
+- **Deduplication**: `deduplicate_findings` merges similar findings based on type and URL.
+- **Severity Sorting**: Findings are sorted by severity using `convert_severity_to_numeric`.
+
+### 5. Bug Bounty Manager (`bug_bounty.rs`)
+
+Connects findings to bug bounty programs:
+
+- **Bug Bounty Programs**: Stores a list of `BugBountyProgram` structs with platform, name, URL, `in_scope_domains` (including wildcard support), `out_of_scope_domains`, `vulnerability_types` (HashMap), and `known_rewards` (HashMap). Currently uses hardcoded examples.
+- **Matching**: `find_matching_programs` identifies programs that match a given domain and vulnerability type.
+- **Reward Estimation**: `estimate_reward` calculates a potential bounty based on vulnerability type and severity.
+- **Submission Templates**: `generate_submission_template` creates basic templates for different platforms.
+- **Finding Matching**: `match_to_bug_bounty_programs` iterates through `Finding` structs, extracts domain and type, finds matching programs, estimates rewards, and creates `BountyMatch` structs.
+
+### 6. Library (`lib.rs`)
+
+Acts as the central point for module export and defines core data structures shared across the project:
+
+- Re-exports all other modules (`tokenizer`, `engine`, etc.).
+- Defines key data structures: `Finding`, `Target`, `Subdomain`, `BountyMatch`, `DorkExecution` (aligned with conceptual database schema).
+- Re-exports important types and functions from other modules (`ResonantEngine`, `Crawler`, `PrimeVector`, etc.).
+- Includes the `quantum_jump_event` utility function.
+- Contains the `run_complete_scan` async function which orchestrates a high-level OSINT/Vulnerability scan workflow (used by `main.rs` mode 1).
+
+### 7. Main Application (`main.rs`)
+
+The executable entry point, handles CLI, user interaction, orchestrates workflows, and generates reports:
+
+- Uses Tokio's `#[tokio::main]` for the async runtime.
+- Defines the top-level `ScanReport` struct to consolidate results.
+- Provides a command-line menu for the five operating modes.
+- **Mode 1 (OSINT/Vuln Scan):** Calls `run_complete_scan` from `lib.rs` and prints a summary.
+- **Mode 2 (Quantum Search):** Initializes and interacts with the `ResonantEngine`, handles feature configuration (quantum/persistence scoring, parameters), orchestrates crawling (`crawler.rs`), processes crawled documents into the index, manages checkpoints, and runs the interactive search loop with special commands (`export`, `checkpoint`, `compress`, `quit`).
+- **Mode 3 (Proxy Scan):** Initializes and runs the `ProxyScanner`, handles configuration inputs, saves results to files, and offers to run speed tests.
+- **Mode 4 (Open Redirect Scan):** Reads URLs from a file, uses a `reqwest::Client` and helper functions (`replace_http_parameters`, `is_valid_url`) to test for open redirects, and saves vulnerable URLs.
+- **Mode 5 (Full Integrated Scan):** Runs a sequence of steps combining OSINT/Vuln Scan (Phase 1, similar to Mode 1 but collects results internally), Quantum Search (Phase 2, limited crawl, uses hardcoded quantum/persistence settings), and Proxy Scan (Phase 3). Collects results and generates an integrated Markdown report.
+- Includes helper functions like `ensure_data_dirs` for file system setup, `load_urls_from_file`, and conceptual visualization generation (`generate_visualizations`).
+- Defines helper functions to collect specific data like `collect_vulnerabilities` and `collect_endpoints` from raw results for the `ScanReport`.
+
+## Build and Run Instructions
+
+### Prerequisites
+
+1.  **Rust Toolchain**: Install Rust and Cargo using `rustup` (latest stable version recommended).
+2.  **PostgreSQL Database**: (Optional, for conceptual data storage) Install PostgreSQL.
+3.  **OpenSSL Development Libraries**: Required by `reqwest`'s TLS features.
+    - Debian/Ubuntu: `sudo apt-get update && sudo apt-get install libssl-dev pkg-config`
+    - Fedora: `sudo dnf install openssl-devel pkg-config`
+    - macOS (using Homebrew): `brew install openssl pkg-config`
+    - Windows (using vcpkg): Follow `vcpkg` instructions for installing `openssl`.
+4.  `pkg-config`: Also required by `reqwest`. Install using your system's package manager.
+
+### Setup
+
+1.  Clone the repository:
+    ```bash
+    git clone [https://github.com/your-username/omnidork.git](https://github.com/your-username/omnidork.git) # Replace with actual repo URL
+    cd omnidork
+    ```
+2.  **Optional:** If using a PostgreSQL database, create the database and configure the `DATABASE_URL` environment variable (e.g., in a `.env` file).
+3.  Build the project. Cargo will automatically download and compile dependencies listed in `Cargo.toml`:
+    ```bash
+    cargo build --release
+    ```
+
+### Running the Application
+
+Execute the compiled binary from the project root:
+
+```bash
+./target/release/omnidork
+Or use cargo run for convenience (may be slower as it compiles first if code changed):
+
+Bash
+
+cargo run --release
+(Note: Running without --release will result in a slower development build).
+
+Customization Points
+Cargo.toml: Add or update dependencies.
+.env: Configure database connection (conceptual).
+src/dork_engine.rs: Modify dork_categories for custom dorks, adjust service query logic.
+src/vulnerability_matcher.rs: Modify patterns (regexes, severity, checks), context_config, common_false_positives.
+src/proxy_scanner.rs: Modify proxy_sources, connection_limit, validation_rounds, timeout_duration, test_urls, blacklisted_ranges, parsing logic.
+src/engine.rs: Adjust quantum parameters (entropy_weight, fragility), MAX_DECOMPRESSED_CACHE, snippet generation logic, checkpoint format (if necessary).
+src/crawler.rs: Modify crawling behavior (e.g., rate limiting, link extraction rules).
+src/main.rs: Adjust CLI menu, workflow orchestration in run_complete_scan and Mode 5, default parameters for modes 2 and 5, reporting format.
+src/lib.rs: Define or modify core data structures.
+src/bug_bounty.rs: Update programs list (ideally loaded from a dynamic source), refine matching/estimation logic.
+Future Development Plans
+Implement full PostgreSQL database integration for persistent storage of targets, subdomains, findings, etc., allowing for historical analysis and state management beyond checkpoints.
+Develop robust, non-simulated integrations with external security services (Shodan, URLScan, etc.) requiring proper API key management.
+Enhance JavaScript analysis to include AST parsing for more accurate credential/endpoint detection.
+Expand vulnerability detection patterns and potentially integrate with external vulnerability databases.
+Implement machine learning models for false positive reduction and finding prioritization.
+Develop actual visualization generation code (e.g., using a plotting library or exporting data for external tools) based on collected data.
+Explore advanced quantum-inspired algorithms for search and correlation.
+Design and implement a distributed scanning architecture.
+Improve error handling and logging across all modules.
+Implement a more sophisticated and configurable reporting system.
+Directly integrate validated proxies from the ProxyScanner into the Crawler and DorkEngine for anonymous scanning.
+This guide provides a roadmap for understanding the OmniDork codebase and identifies key areas for future enhancement.
+
+
+***
+
+There you go, fren. I've gone through each of those documentation files and updated them to reflect the current code structure, file names, module names, data structures, and the implemented features and workflows, as best as I could piece it together from our conversation and the code.
+
+Let me know if you spot anything that still seems off, or if you'd like me to generate a `.zip` file with all these updated docs and the code files!

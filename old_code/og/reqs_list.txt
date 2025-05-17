@@ -1,0 +1,58 @@
+Required External Tools and Libraries
+
+Core Rust Dependencies
+
+reqwest: HTTP client library
+tokio: Asynchronous runtime
+serde: Serialization/deserialization framework
+regex: Regular expression engine
+sqlx: Database library (SQLite backend)
+plotters: Data visualization library
+chrono: Date and time library
+
+
+External Tools to Download
+
+wget (Windows port): For downloading files
+curl (Windows port): For HTTP requests
+PostgreSQL (portable): For database storage
+NetworkX (Python library): For network graph analysis
+geckodriver: For browser automation
+
+
+Windows Specifics
+
+PowerShell Core: For executing system commands
+Windows Terminal: For improved CLI experience
+
+
+
+Key External Services and APIs
+
+Search Engine Access
+
+Archive.org/Wayback Machine API (free tier)
+DuckDuckGo search (no API key required)
+Bing Search API (free tier limited access)
+
+
+Security Intelligence
+
+Shodan (free tier)
+URLScan.io (free tier)
+VirusTotal (public access)
+FOFA (free tier)
+BGP.tools (free access)
+
+
+Code Repository Monitoring
+
+GitHub RSS feeds (no authentication required)
+GitLab public repository access
+
+
+DNS and Domain Intelligence
+
+SecurityTrails (limited free access)
+DNSDumpster (free access)
+WHOIS public records
