@@ -4,54 +4,23 @@ version = "0.1.0"
 edition = "2021" # Use the latest stable edition
 
 [dependencies]
-# Asynchronous runtime
-tokio = { version = "1.37.0", features = ["full"] } # Use a recent version
-
-# HTTP client
-reqwest = { version = "0.12.4", features = ["json", "rustls-tls", "socks"] } # Add socks feature for proxies, use rustls-tls for wider compatibility
-url = "2.5.0" # For URL parsing
-
-# Data serialization/deserialization
+tokio = { version = "1.37.0", features = ["full"] }
+reqwest = { version = "0.12.4", features = ["json", "rustls-tls", "socks"] }
+url = "2.1.3"
 serde = { version = "1.0.203", features = ["derive"] }
 serde_json = "1.0.117"
-
-# Regular expressions
 regex = "1.10.5"
-
-# Data structures and math
-std = "1.78.0" # Generally align with Rust version, though not strictly a dependency like crates
-num-complex = "0.4.5" # For complex numbers
-nalgebra = "0.33.0" # For linear algebra (matrices, vectors)
-rand = "0.8.5" # For random number generation
-ipnet = "2.9.1" # For IP network calculations
-
-# HTML parsing (for proxy scanner and possibly dork results)
+num-complex = "0.4.5"
+nalgebra = "0.33.0"
+rand = "0.8.5"
+ipnet = "2.9.1"
 scraper = "0.19.0"
-
-# Compression (for engine checkpoints)
-flate2 = { version = "1.0.30", features = ["zlib"] } # Explicitly enable a backend if needed, or use default
-
-# Asynchronous streams
+flate2 = { version = "1.0.30", features = ["zlib"] }
 futures = "0.3.30"
-
-# Logging
 log = "0.4.21"
-env_logger = "0.11.3" # For basic logging setup
-
-# Base64 encoding/decoding (for checkpoints)
+env_logger = "0.11.3"
 base64 = "0.22.1"
-
-# Timestamping (needed for some structs)
 chrono = "0.4.38"
-
-# URL encoding (for dork engine)
-urlencoding = "2.5.0"
-
-
-# Feature to enable/disable quantum/persistence based on compile time
-# This is more advanced, for now we'll handle it with runtime flags in main.rs
-# [features]
-# quantum = []
-# persistence = []
-
-# [dev-dependencies] # Add dev dependencies for testing utilities if needed
+urlencoding = "2.1.3"
+primal = "0.3.3"  # For prime factorization
+rayon = "1.10.0"  # For parallel processing
